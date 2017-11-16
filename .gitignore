@@ -1,0 +1,8 @@
+# macOS folder data files
+.DS_Store
+
+# Vagrant data files
+.vagrant
+
+# Installed Swift binaries
+swift
