@@ -6,6 +6,8 @@ A Vagrant configuration that downloads and installs Swift for Linux in one easy 
 ## What Is It?
 It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux virtual machine on your computer, and then installing Swift for Linux on that virtual machine.
 
+(In a similar vein, I also recommend checking out the [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/), which lets you type and run Swift code straight from your web browser. 💻😎)
+
 ## What Do I Need To Use It?
 It should work on most modern Mac, Windows, and Linux machines.
 
@@ -20,7 +22,7 @@ If you encounter any problems installing or running, feel free to submit an issu
 - Once that's done, sync this repository to your machine, then navigate to the corresponding local directory in the terminal.
 - Run `vagrant up` and wait a few minutes for the setup process to complete.
 - Use `vagrant ssh` to log in to your newly-provisioned virtual machine.
-- Within the virtual machine, your repo directory is accessible as `/vagrant`, so change to that directory with `cd /vagrant`.
+- Within the virtual machine, your repo directory is accessible as `/vagrant`, so change to that directory by entering `cd /vagrant`.
 - Enter `swift test.swift` to run the included test file. Hooray! You're running Swift code on Linux! 🎉
 
 ## Playing Around
@@ -49,11 +51,15 @@ If you encounter any problems installing or running, feel free to submit an issu
   * [Uninstalling VirtualBox](https://www.virtualbox.org/manual/ch02.html)
 
 ## Further Reading
-- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub)
+- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub))
+- [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
 - Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
 - Apple's [Swift reference documentation](https://developer.apple.com/documentation/swift)
 - [Swift REPL guide](https://swift.org/getting-started/#using-the-repl) and [Debugging with LLDB](https://swift.org/getting-started/#using-the-lldb-debugger)
+- [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/)
 - The [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown)
+- [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
+- [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
 - [Vagrant documentation](https://www.vagrantup.com/docs/)
 - [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
 - [Ubuntu documentation](https://help.ubuntu.com)
