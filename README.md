@@ -4,23 +4,19 @@ A Vagrant configuration that downloads and installs Swift for Linux in one easy 
 <sup><sub>(\* or three easy steps, if you include installing Vagrant and VirtualBox. 😁)</sub></sup>
 
 ## What Is It?
-It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux "virtual machine", and installing Swift for Linux on that virtual machine.
+It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux virtual machine on your computer, and then installing Swift for Linux on that virtual machine.
 
 ## What Do I Need To Use It?
-It should work on most modern Mac, Windows, and Linux computers.
+It should work on most modern Mac, Windows, and Linux machines.
 
-A good network connection is necessary during initial setup, as the installation can involve a gigabyte or two of downloading. Once the installation is complete, however, no internet connection is required at all for further usage.
+A good network connection is necessary during initial setup, as the installation can involve a gigabyte or two of downloading. Once the installation is complete, however, no internet connection is required for further usage.
 
-You'll also need around 4GB of free hard drive space:
-- Vagrant + VirtualBox: ~300MB + ~200MB
-- Ubuntu image: ~400MB
-- Virtual machine virtual hard drive: ~2300MB
-- Swift installation: ~500MB
+You'll also need around 4GB of free hard drive space.
 
-If you encounter any problems installing or running on your machine, feel free to submit an issue or (even better) a pull request. :)
+If you encounter any problems installing or running, feel free to submit an issue or (even better) a pull request. 😉
 
 ## How Do I Use It?
-- [Vagrant](https://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) enable you to create and run virtual machines on your computer. If you haven't used them before, you'll need to download and install those two programs on your computer first. (Like Swift itself, both are free and open-source.)
+- [Vagrant](https://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) enable you to create and run virtual machines on your computer. If you haven't used them before, you'll need to download and install those two programs first. (Like Swift itself, both are free and open-source.)
 - Once that's done, sync this repository to your machine, then navigate to the corresponding local directory in the terminal.
 - Run `vagrant up` and wait a few minutes for the setup process to complete.
 - Use `vagrant ssh` to log in to your newly-provisioned virtual machine.
@@ -28,7 +24,7 @@ If you encounter any problems installing or running on your machine, feel free t
 - Enter `swift test.swift` to run the included test file. Hooray! You're running Swift code on Linux! 🎉
 
 ## Playing Around
-- As noted above, you can use `swift` plus the name of a Swift file to run that file and display any output.
+- As noted above, you can use `swift` plus the name of a Swift file to run that file and display any output. (Why not start off by creating a new `test2.swift` file in your repo directory, then seeing if you can run it the same way you ran `test.swift` above?)
 - You can also use `swift` by itself (from any directory) to enter the [Swift REPL environment](https://swift.org/getting-started/#using-the-repl), where you can type Swift code and see the results immediately.
 - Lastly, you can use Swift's [package manager system](https://swift.org/getting-started/#using-the-package-manager) to actually compile your Swift code into a command-line executable.
 
@@ -51,3 +47,13 @@ If you encounter any problems installing or running on your machine, feel free t
 - Vagrant and VirtualBox can be completely uninstalled by following their respective uninstall instructions:
   * [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
   * [Uninstalling VirtualBox](https://www.virtualbox.org/manual/ch02.html)
+
+## Further Reading
+- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub)
+- Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
+- Apple's [Swift reference documentation](https://developer.apple.com/documentation/swift)
+- [Swift REPL guide](https://swift.org/getting-started/#using-the-repl) and [Debugging with LLDB](https://swift.org/getting-started/#using-the-lldb-debugger)
+- The [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown)
+- [Vagrant documentation](https://www.vagrantup.com/docs/)
+- [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
+- [Ubuntu documentation](https://help.ubuntu.com)

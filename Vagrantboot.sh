@@ -5,21 +5,14 @@
 SWIFT_VERSION='4.0.2'  # examples: '4.0', '3.1.1', '2.2.1'
 
 # determine the current operating system version
-OS_VERSION_PATTERN="Release:.([0-9][0-9])\.([0-9][0-9])"
+OS_VERSION_PATTERN="Release:[^0-9]([0-9][0-9])\.([0-9][0-9])"
 OS_VERSION_SOURCE=$(lsb_release -a)
 if [[ $OS_VERSION_SOURCE =~ $OS_VERSION_PATTERN ]] ; then
   OS_VERSION_MAJOR="${BASH_REMATCH[1]}"
   OS_VERSION_MINOR="${BASH_REMATCH[2]}"
-  OS_VERSION="$OS_VERSION_MAJOR.$OS_VERSION_MINOR"
   echo "OS version detected: Ubuntu $OS_VERSION_MAJOR.$OS_VERSION_MINOR..."
 else
   echo "ERROR: Couldn't determine operating system version; exiting installation."
-  exit 1
-fi
-
-# (for now, this script has only been tested with Ubuntu 16.04)
-if [ "$OS_VERSION" != "16.04" ] ; then
-  echo "ERROR: Unknown operating system version; exiting installation."
   exit 1
 fi
 
@@ -57,8 +50,16 @@ if [ "$INSTALL_SWIFT" = true ] ; then
 
   # download the archive and signature files
   mkdir /vagrant/swift
-  curl $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
-  curl "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+  curl --fail $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
+  CURL_ERROR=$?
+  curl --fail "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+  CURL_ERROR=$(($CURL_ERROR+$?))
+  if [ $CURL_ERROR -eq 0 ] ; then
+      echo "Swift archive downloaded..."
+  else
+      echo "ERROR: Swift archive $SWIFT_ARCHIVE couldn't be downloaded. Double-check that this platform version + Swift version are listed here: https://swift.org/download/"
+      exit 1
+  fi
 
   # import the Swift PGP keys (see: https://swift.org/download/#using-downloads)
   wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
@@ -66,13 +67,13 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   gpg --keyserver hkp://pool.sks-keyservers.net --refresh-keys Swift
   gpg --verify "/vagrant/swift/$SWIFT_ARCHIVE.sig"
   if [ $? -eq 0 ] ; then
-      echo "Archive integrity verified..."
+      echo "Swift archive integrity verified..."
   else
-      echo "ERROR: Archive integrity check failed; exiting installation."
+      echo "ERROR: Swift archive integrity check failed; exiting installation."
       exit 1
   fi
 
-  # extract the archive (creates a "usr" subdir)
+  # extract the archive (creates a "swift/[this-swift-version]/usr" subdir under /vagrant)
   cd /vagrant/swift
   tar xzf $SWIFT_ARCHIVE
 
