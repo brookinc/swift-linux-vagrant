@@ -52,9 +52,9 @@ If you encounter any problems installing or running, feel free to submit an issu
 
 ## Further Reading
 - [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub))
-- [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
+- [Swift Standard Library documentation](https://developer.apple.com/documentation/swift)
+- Apple's [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
 - Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
-- Apple's [Swift reference documentation](https://developer.apple.com/documentation/swift)
 - [Swift REPL guide](https://swift.org/getting-started/#using-the-repl) and [Debugging with LLDB](https://swift.org/getting-started/#using-the-lldb-debugger)
 - [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/)
 - [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown) and [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
