@@ -57,9 +57,8 @@ If you encounter any problems installing or running, feel free to submit an issu
 - Apple's [Swift reference documentation](https://developer.apple.com/documentation/swift)
 - [Swift REPL guide](https://swift.org/getting-started/#using-the-repl) and [Debugging with LLDB](https://swift.org/getting-started/#using-the-lldb-debugger)
 - [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/)
-- The [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown)
-- [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
-- [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
+- [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown) and [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
+- The [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
 - [Vagrant documentation](https://www.vagrantup.com/docs/)
 - [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
 - [Ubuntu documentation](https://help.ubuntu.com)
