@@ -1,7 +1,7 @@
 # swift-linux-vagrant
 A Vagrant configuration that downloads and installs Swift for Linux in one easy step (\*) .
 
-<sup><sub>(\* or three easy steps, if you include installing Vagrant and VirtualBox. 😁)</sub></sup>
+<sup><sub>(\* or three easy steps, if you include installing VirtualBox and Vagrant. 😁)</sub></sup>
 
 ## What Is It?
 It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux virtual machine on your computer, and then installing Swift for Linux on that virtual machine.
@@ -18,8 +18,9 @@ You'll also need around 4GB of free hard drive space.
 If you encounter any problems installing or running, feel free to submit an issue or (even better) a pull request. 😉
 
 ## How Do I Use It?
-- [Vagrant](https://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) enable you to create and run virtual machines on your computer. If you haven't used them before, you'll need to download and install those two programs first. (Like Swift itself, both are free and open-source.)
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](https://www.vagrantup.com/downloads.html) enable you to create and run virtual machines on your computer. If you haven't used them before, you'll need to download and install those two programs first. (Like Swift itself, both are free and open-source.)
 - Once that's done, sync this repository to your machine, then navigate to the corresponding local directory in the terminal.
+- Install the [vbguest](https://github.com/dotless-de/vagrant-vbguest) plugin by running: `vagrant plugin install vagrant-vbguest`.
 - Run `vagrant up` and wait a few minutes for the setup process to complete.
 - Use `vagrant ssh` to log in to your newly-provisioned virtual machine.
 - Within the virtual machine, your repo directory is accessible as `/vagrant`, so change to that directory by entering `cd /vagrant`.
@@ -46,9 +47,9 @@ If you encounter any problems installing or running, feel free to submit an issu
   * This will delete the virtual machine that was created (under `"~/VirtualBox VMs/"`), however the files in your repo directory will remain untouched.
   * To free up additional space, you can delete the `swift` subdirectory that was created inside your repo directory. It contains the Swift binaries that were downloaded by the script. (They'll be re-downloaded the next time you run `vagrant up`.)
 - Vagrant also keeps copies of the operating system image files it downloads in `~/.vagrant.d/boxes/` -- you can wipe this directory whenever needed; the newest image file will simply be re-downloaded the next time it's required.
-- Vagrant and VirtualBox can be completely uninstalled by following their respective uninstall instructions:
-  * [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
+- VirtualBox and Vagrant can be completely uninstalled by following their respective uninstall instructions:
   * [Uninstalling VirtualBox](https://www.virtualbox.org/manual/ch02.html)
+  * [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
 
 ## Further Reading
 - [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub))
@@ -59,6 +60,6 @@ If you encounter any problems installing or running, feel free to submit an issu
 - [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/)
 - [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown) and [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
 - The [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
-- [Vagrant documentation](https://www.vagrantup.com/docs/)
 - [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
+- [Vagrant documentation](https://www.vagrantup.com/docs/)
 - [Ubuntu documentation](https://help.ubuntu.com)
