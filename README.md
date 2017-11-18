@@ -11,7 +11,7 @@ It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org
 ## What Do I Need To Use It?
 It should work on most modern Mac, Windows, and Linux machines.
 
-A good network connection is necessary during initial setup, as the installation can involve a gigabyte or two of downloading. Once the installation is complete, however, no internet connection is required for further usage.
+A good network connection is necessary during initial setup, as the installation involves 1GB or so of downloading. Once the installation is complete, however, no internet connection is required for further usage.
 
 You'll also need around 4GB of free hard drive space.
 
