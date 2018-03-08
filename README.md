@@ -6,7 +6,7 @@ A Vagrant configuration that downloads and installs Swift for Linux in one easy 
 ## What Is It?
 It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux virtual machine on your computer, and then installing Swift for Linux on that virtual machine.
 
-(In a similar vein, I also recommend checking out the [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/), which lets you type and run Swift code straight from your web browser. 💻😎)
+(For an even faster way to run simple Swift code, check out the [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/), which lets you type and evaluate Swift code straight from your web browser. 💻😎)
 
 ## What Do I Need To Use It?
 It should work on most modern Mac, Windows, and Linux machines.
@@ -23,7 +23,7 @@ If you encounter any problems installing or running, feel free to submit an issu
 - Install the [vbguest](https://github.com/dotless-de/vagrant-vbguest) plugin by running: `vagrant plugin install vagrant-vbguest`.
 - Run `vagrant up` and wait a few minutes for the setup process to complete.
 - Use `vagrant ssh` to log in to your newly-provisioned virtual machine.
-- Within the virtual machine, your repo directory is accessible as `/vagrant`, so change to that directory by entering `cd /vagrant`.
+- Within the virtual machine, your repo directory is accessible as `/vagrant`, so use `cd /vagrant` to change to that directory.
 - Enter `swift test.swift` to run the included test file. Hooray! You're running Swift code on Linux! 🎉
 
 ## Playing Around

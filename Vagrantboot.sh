@@ -60,7 +60,9 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   echo "Installing Swift..."
 
   # download the archive and signature files
-  mkdir /vagrant/swift
+  if [ ! -d /vagrant/swift ] ; then
+    mkdir /vagrant/swift
+  fi
   curl --fail --silent --show-error $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
   CURL_ERROR=$?
   curl --fail --silent --show-error "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
