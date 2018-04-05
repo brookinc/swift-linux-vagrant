@@ -2,7 +2,7 @@
 
 # update this variable to reflect the desired Swift version to install
 # (for details and latest binaries, see https://swift.org/download/)
-SWIFT_VERSION='4.0.3'  # examples: '4.0', '3.1.1', '2.2.1'
+SWIFT_VERSION='4.1'  # examples: '4.0', '3.1.1', '2.2.1'
 
 # determine the current operating system version
 OS_VERSION_PATTERN="Release:[^0-9]([0-9][0-9])\.([0-9][0-9])"
