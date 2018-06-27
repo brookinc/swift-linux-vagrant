@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
+ export VAGRANT_PREFER_SYSTEM_BIN=0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
+
+# also save said environment variables into our .profile for all future sessions
+  echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~ubuntu/.profile
+  if [ -e ~vagrant/.profile ] ; then
+    echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~vagrant/.profile
+  fi
+
 # update this variable to reflect the desired Swift version to install
 # (for details and latest binaries, see https://swift.org/download/)
 SWIFT_VERSION='4.1.2'  # examples: '4.0', '3.1.1', '2.2.1'
