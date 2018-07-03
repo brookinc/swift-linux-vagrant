@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 
 # add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
- export VAGRANT_PREFER_SYSTEM_BIN=0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
+export VAGRANT_PREFER_SYSTEM_BIN=0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
 
 # also save said environment variables into our .profile for all future sessions
-  echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~ubuntu/.profile
-  if [ -e ~vagrant/.profile ] ; then
-    echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~vagrant/.profile
-  fi
+echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~ubuntu/.profile
+if [ -e ~vagrant/.profile ] ; then
+  echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~vagrant/.profile
+fi
 
 # update this variable to reflect the desired Swift version to install
 # (for details and latest binaries, see https://swift.org/download/)
+# (this field may also be left blank when a dev snapshot version of
+# the trunk / master branch is specified below)
 SWIFT_VERSION='4.1.2'  # examples: '4.0', '3.1.1', '2.2.1'
+
+# fill in this variable if you want to download a specific development snapshot rather than a final release
+# (for details and latest binaries, see https://swift.org/download/)
+SWIFT_DEV_SNAPSHOT=''  # example: '2018-06-29-a'
 
 # determine the current operating system version
 OS_VERSION_PATTERN="Release:[^0-9]([0-9][0-9])\.([0-9][0-9])"
@@ -28,9 +34,26 @@ fi
 # set up file names and paths based on the above
 SWIFT_PLATFORM_PATH="ubuntu$OS_VERSION_MAJOR$OS_VERSION_MINOR"
 SWIFT_PLATFORM="ubuntu$OS_VERSION_MAJOR.$OS_VERSION_MINOR"
-SWIFT_RELEASE="swift-$SWIFT_VERSION-RELEASE-$SWIFT_PLATFORM"
-SWIFT_ARCHIVE="$SWIFT_RELEASE.tar.gz"
-SWIFT_URL="https://swift.org/builds/swift-$SWIFT_VERSION-release/$SWIFT_PLATFORM_PATH/swift-$SWIFT_VERSION-RELEASE/$SWIFT_ARCHIVE"
+SWIFT_RELEASE="swift-$SWIFT_VERSION-RELEASE"
+SWIFT_ARCHIVE="$SWIFT_RELEASE-$SWIFT_PLATFORM.tar.gz"
+SWIFT_URL="https://swift.org/builds/swift-$SWIFT_VERSION-release/$SWIFT_PLATFORM_PATH/$SWIFT_RELEASE/$SWIFT_ARCHIVE"
+
+if [ -n "$SWIFT_DEV_SNAPSHOT" ] ; then
+  if [ -n "$SWIFT_VERSION" ] ; then
+    # setup specified version snapshot links
+    SWIFT_RELEASE="swift-$SWIFT_VERSION-DEVELOPMENT-SNAPSHOT-$SWIFT_DEV_SNAPSHOT"
+    SWIFT_ARCHIVE="$SWIFT_RELEASE-$SWIFT_PLATFORM.tar.gz"
+    SWIFT_URL="https://swift.org/builds/swift-$SWIFT_VERSION-branch/$SWIFT_PLATFORM_PATH/$SWIFT_RELEASE/$SWIFT_ARCHIVE"
+  else
+    # setup trunk / master dev snapshot links
+    SWIFT_RELEASE="swift-DEVELOPMENT-SNAPSHOT-$SWIFT_DEV_SNAPSHOT"
+    SWIFT_ARCHIVE="$SWIFT_RELEASE-$SWIFT_PLATFORM.tar.gz"
+    SWIFT_URL="https://swift.org/builds/development/$SWIFT_PLATFORM_PATH/$SWIFT_RELEASE/$SWIFT_ARCHIVE"
+  fi
+  echo "Using development snapshot $SWIFT_RELEASE-$SWIFT_PLATFORM..."
+else
+  echo "Using release $SWIFT_RELEASE-$SWIFT_PLATFORM..."
+fi
 
 if (( $OS_VERSION_MAJOR >= 16 )) ; then
   APT=apt
@@ -65,6 +88,8 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   sudo $APT install -y libicu-dev
   # we also need python2.7 for now -- see: https://bugs.swift.org/browse/SR-2743
   sudo $APT install -y libpython2.7-dev
+  # we also need libcurl3 for now -- see: https://bugs.swift.org/browse/SR-2744
+  sudo $APT install -y libcurl3
 
   echo "Installing Swift..."
 
@@ -101,14 +126,14 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   tar xzf $SWIFT_ARCHIVE
 
   # add our swift dir to $PATH for the current session:
-  export PATH=/vagrant/swift/$SWIFT_RELEASE/usr/bin:"${PATH}"
+  export PATH=/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:"${PATH}"
   # ...and for all future sessions, by adding an entry to ~ubuntu/.profile
   # (we have to specify the default username, 'ubuntu', here -- we can't use just use
   # ~/.profile, because we're running as root, so ~/.profile evaluates to /root/.profile)
-  echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE/usr/bin:\$PATH\"" >> ~ubuntu/.profile
+  echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:\$PATH\"" >> ~ubuntu/.profile
   # also add our path to ~vagrant/.profile, for the cases when that's the default user:
   if [ -e ~vagrant/.profile ] ; then
-    echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE/usr/bin:\$PATH\"" >> ~vagrant/.profile
+    echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:\$PATH\"" >> ~vagrant/.profile
   fi
 
   # test our swift install
