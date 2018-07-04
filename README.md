@@ -41,6 +41,8 @@ If you encounter any problems installing or running, feel free to submit an issu
 - As-is, these files will install the latest release of Swift on Ubuntu 16.04, but you can easily change to a [different supported](https://swift.org/download/) Swift or Ubuntu version:
   * If you want to install a different version of Swift, change the `SWIFT_VERSION` variable in `Vagrantboot.sh`.
   * If you want to use a different version of Ubuntu, change the `config.vm.box` entry in `Vagrantfile`.
+  * If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true`
+    * You can further customize how SwiftLint processes your code by [editing](https://github.com/realm/SwiftLint#configuration) the `.swiftlint.yml` file that gets created for you.
 
 ## Uninstalling
 - To get rid of your virtual machine, you can run `vagrant destroy` from the repo directory.

@@ -151,6 +151,61 @@ else
   echo "Skipping Swift install..."
 fi
 
+INSTALL_SWIFTLINT=false
+if [ "$INSTALL_SWIFTLINT" = true ] ; then
+  echo "Installing SwiftLint..."
+  # for details, see: https://github.com/realm/SwiftLint/issues/732#issuecomment-339502688
+  sudo $APT install -y clang
+  sudo $APT install -y libblocksruntime0
+  sudo $APT install -y libcurl4-openssl-dev
+
+  export LINUX_SOURCEKIT_LIB_PATH="/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
+  echo "LINUX_SOURCEKIT_LIB_PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib\"" >> ~ubuntu/.profile
+  if [ -e ~vagrant/.profile ] ; then
+    echo "LINUX_SOURCEKIT_LIB_PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib\"" >> ~vagrant/.profile
+  fi
+
+  git clone https://github.com/realm/SwiftLint.git /vagrant/swift/swiftlintbuild
+  pushd /vagrant/swift/swiftlintbuild
+  swift build -c release --static-swift-stdlib
+  if [ ! -d /vagrant/swift/swiftlint ] ; then
+    mkdir /vagrant/swift/swiftlint
+  fi
+  mv .build/x86_64-unknown-linux/release/swiftlint /vagrant/swift/swiftlint
+  popd
+  rm -rf /vagrant/swift/swiftlintbuild
+
+  export PATH=/vagrant/swift/swiftlint:"${PATH}"
+  echo "PATH=\"/vagrant/swift/swiftlint:\$PATH\"" >> ~ubuntu/.profile
+  # also add our path to ~vagrant/.profile, for the cases when that's the default user:
+  if [ -e ~vagrant/.profile ] ; then
+    echo "PATH=\"/vagrant/swift/swiftlint:\$PATH\"" >> ~vagrant/.profile
+  fi
+
+  # write out a blank swiftlint configuration file
+  if [ ! -e /vagrant/.swiftlint.yml ] ; then
+    echo "Creating .swiftlint.yml..."
+    pushd /vagrant
+    echo "# For an overview of .swiftlint.yml files, see:" >> .swiftlint.yml
+    echo "# https://github.com/realm/SwiftLint#configuration" >> .swiftlint.yml
+    echo "# For a sample .swiftlint.yml file, see:" >> .swiftlint.yml
+    echo "# https://github.com/realm/SwiftLint/blob/master/.swiftlint.yml" >> .swiftlint.yml
+    echo "# For a full list of supported rules, see:" >> .swiftlint.yml
+    echo "# https://github.com/realm/SwiftLint/blob/master/Rules.md" >> .swiftlint.yml
+    echo "included:" >> .swiftlint.yml
+    echo "# (default -- all files)" >> .swiftlint.yml
+    echo "excluded:" >> .swiftlint.yml
+    echo "# (default -- no exclusions)" >> .swiftlint.yml
+    echo "disabled_rules:" >> .swiftlint.yml
+    echo "# (use default rule set)" >> .swiftlint.yml
+    echo "opt_in_rules:" >> .swiftlint.yml
+    echo "# (use default rule set)" >> .swiftlint.yml
+    popd
+  fi
+else
+  echo "Skipping SwiftLint install..."
+fi
+
 # Clean up again now that we're done installing
 sudo $APT -y autoremove
 sudo $APT -y clean
