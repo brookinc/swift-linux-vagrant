@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-# add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
-export VAGRANT_PREFER_SYSTEM_BIN=0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
+# helper function for setting environment variables
+set_env_variable () {
+  # export it for the current session
+  export "$1=$2"
+  # save it to our .profile for all future sessions
+  # (we have to specify the ~vagrant home directory here, since we're logged in as root when this script runs)
+  echo "$1=$2" >> ~vagrant/.profile
+}
 
-# also save said environment variables into our .profile for all future sessions
-echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~ubuntu/.profile
-if [ -e ~vagrant/.profile ] ; then
-  echo "VAGRANT_PREFER_SYSTEM_BIN=0" >> ~vagrant/.profile
-fi
+# add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
+set_env_variable VAGRANT_PREFER_SYSTEM_BIN 0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
 
 # update this variable to reflect the desired Swift version to install
 # (for details and latest binaries, see https://swift.org/download/)
@@ -125,16 +128,8 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   cd /vagrant/swift
   tar xzf $SWIFT_ARCHIVE
 
-  # add our swift dir to $PATH for the current session:
-  export PATH=/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:"${PATH}"
-  # ...and for all future sessions, by adding an entry to ~ubuntu/.profile
-  # (we have to specify the default username, 'ubuntu', here -- we can't use just use
-  # ~/.profile, because we're running as root, so ~/.profile evaluates to /root/.profile)
-  echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:\$PATH\"" >> ~ubuntu/.profile
-  # also add our path to ~vagrant/.profile, for the cases when that's the default user:
-  if [ -e ~vagrant/.profile ] ; then
-    echo "PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:\$PATH\"" >> ~vagrant/.profile
-  fi
+  # add our swift dir to $PATH
+  set_env_variable PATH /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:"${PATH}"
 
   # test our swift install
   swift /vagrant/test.swift
@@ -159,11 +154,7 @@ if [ "$INSTALL_SWIFTLINT" = true ] ; then
   sudo $APT install -y libblocksruntime0
   sudo $APT install -y libcurl4-openssl-dev
 
-  export LINUX_SOURCEKIT_LIB_PATH="/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
-  echo "LINUX_SOURCEKIT_LIB_PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib\"" >> ~ubuntu/.profile
-  if [ -e ~vagrant/.profile ] ; then
-    echo "LINUX_SOURCEKIT_LIB_PATH=\"/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib\"" >> ~vagrant/.profile
-  fi
+  set_env_variable LINUX_SOURCEKIT_LIB_PATH "/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
 
   git clone https://github.com/realm/SwiftLint.git /vagrant/swift/swiftlintbuild
   pushd /vagrant/swift/swiftlintbuild
@@ -175,12 +166,8 @@ if [ "$INSTALL_SWIFTLINT" = true ] ; then
   popd
   rm -rf /vagrant/swift/swiftlintbuild
 
-  export PATH=/vagrant/swift/swiftlint:"${PATH}"
-  echo "PATH=\"/vagrant/swift/swiftlint:\$PATH\"" >> ~ubuntu/.profile
-  # also add our path to ~vagrant/.profile, for the cases when that's the default user:
-  if [ -e ~vagrant/.profile ] ; then
-    echo "PATH=\"/vagrant/swift/swiftlint:\$PATH\"" >> ~vagrant/.profile
-  fi
+  # add swiftlint dir to $PATH
+  set_env_variable PATH /vagrant/swift/swiftlint:"${PATH}"
 
   # write out a blank swiftlint configuration file
   if [ ! -e /vagrant/.swiftlint.yml ] ; then
