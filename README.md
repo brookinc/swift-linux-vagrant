@@ -35,25 +35,25 @@ If you encounter any problems installing or running, feel free to submit an issu
 - You can quit the Swift REPL with `:quit`.
 - After that, you can log out of your virtual machine with `exit`.
 - To shut down your virtual machine, you can use `vagrant suspend` (which saves the contents of the VM's memory to disk first) or `vagrant halt` (which simply shuts the VM down). Either is typically fine.
-- To get rid of your virtual machine altogether (ie. to free up hard drive space) see the *"Uninstalling"* section below.
+- To get rid of your virtual machine altogether (ie. to free up hard drive space) see the _"Uninstalling"_ section below.
 
 ## Customizing
 - As-is, these files will install the latest release of Swift on Ubuntu 16.04, but you can easily change to a [different supported](https://swift.org/download/) Swift or Ubuntu version:
-  * If you want to install a different version of Swift, change the `SWIFT_VERSION` variable in `Vagrantboot.sh`.
-  * If you want to use a different version of Ubuntu, change the `config.vm.box` entry in `Vagrantfile`.
-  * If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true` (and if you're on Windows, [run your command prompt as an administrator](https://github.com/brookinc/swift-linux-vagrant/issues/2) when you initialize your VM with `vagrant up` for the first time).
-    * To run SwiftLint on your code, simply run `swiftlint` in the `/vagrant` directory (or wherever else you've put your Swift code).
-    * You can further customize how SwiftLint processes your code by [editing](https://github.com/realm/SwiftLint#configuration) the `.swiftlint.yml` file that gets created for you.
-    * For more SwiftLint options, run `swiftlint help`, or see the [documentation](https://github.com/realm/SwiftLint#command-line).
+  - If you want to install a different version of Swift, change the `SWIFT_VERSION` variable in `Vagrantboot.sh`.
+  - If you want to use a different version of Ubuntu, change the `config.vm.box` entry in `Vagrantfile`.
+  - If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true` (and if you're on Windows, [run your command prompt as an administrator](https://github.com/brookinc/swift-linux-vagrant/issues/2) when you initialize your VM with `vagrant up` for the first time).
+    - To run SwiftLint on your code, simply run `swiftlint` in the `/vagrant` directory (or wherever else you've put your Swift code).
+    - You can further customize how SwiftLint processes your code by [editing](https://github.com/realm/SwiftLint#configuration) the `.swiftlint.yml` file that gets created for you.
+    - For more SwiftLint options, run `swiftlint help`, or see the [documentation](https://github.com/realm/SwiftLint#command-line).
 
 ## Uninstalling
 - To get rid of your virtual machine, you can run `vagrant destroy` from the repo directory.
-  * This will delete the virtual machine that was created (under `"~/VirtualBox VMs/"`), however the files in your repo directory will remain untouched.
-  * To free up additional space, you can delete the `swift` subdirectory that was created inside your repo directory. It contains the Swift binaries that were downloaded by the script. (They'll be re-downloaded the next time you run `vagrant up`.)
+  - This will delete the virtual machine that was created (under `"~/VirtualBox VMs/"`), however the files in your repo directory will remain untouched.
+  - To free up additional space, you can delete the `swift` subdirectory that was created inside your repo directory. It contains the Swift binaries that were downloaded by the script. (They'll be re-downloaded the next time you run `vagrant up`.)
 - Vagrant also keeps copies of the operating system image files it downloads in `~/.vagrant.d/boxes/` -- you can wipe this directory whenever needed; the newest image file will simply be re-downloaded the next time it's required.
 - VirtualBox and Vagrant can be completely uninstalled by following their respective uninstall instructions:
-  * [Uninstalling VirtualBox](https://www.virtualbox.org/manual/ch02.html)
-  * [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
+  - [Uninstalling VirtualBox](https://www.virtualbox.org/manual/ch02.html)
+  - [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
 
 ## Further Reading
 - [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift42.epub))
