@@ -1,0 +1,3 @@
+# force linefeed (Unix-style) line endings for all .swift files, to prevent SwiftLint
+# vertical_whitespace warnings (and line number mismatches) on Windows host machines
+*.swift eol=lf
