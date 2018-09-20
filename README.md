@@ -6,7 +6,7 @@ A Vagrant configuration that downloads and installs Swift for Linux in one easy 
 ## What Is It?
 It's an easy (albeit no-frills) way to compile and run [Swift](https://swift.org/documentation/) code on any Mac, Windows, or Linux machine, by creating a Linux virtual machine on your computer, and then installing Swift for Linux on that virtual machine.
 
-(For an even faster way to run simple Swift code, check out the [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/), which lets you type and evaluate Swift code straight from your web browser. 💻😎)
+(You can also check out the [Online Swift Playground](http://online.swiftplayground.run/), which lets you type and evaluate simple Swift code straight from your web browser. 💻😎)
 
 ## What Do I Need To Use It?
 It should work on most modern Mac, Windows, and Linux machines.
@@ -41,8 +41,10 @@ If you encounter any problems installing or running, feel free to submit an issu
 - As-is, these files will install the latest release of Swift on Ubuntu 16.04, but you can easily change to a [different supported](https://swift.org/download/) Swift or Ubuntu version:
   * If you want to install a different version of Swift, change the `SWIFT_VERSION` variable in `Vagrantboot.sh`.
   * If you want to use a different version of Ubuntu, change the `config.vm.box` entry in `Vagrantfile`.
-  * If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true`
+  * If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true` (and if you're on Windows, [run your command prompt as an administrator](https://github.com/brookinc/swift-linux-vagrant/issues/2) when you initialize your VM with `vagrant up` for the first time).
+    * To run SwiftLint on your code, simply run `swiftlint` in the `/vagrant` directory (or wherever else you've put your Swift code).
     * You can further customize how SwiftLint processes your code by [editing](https://github.com/realm/SwiftLint#configuration) the `.swiftlint.yml` file that gets created for you.
+    * For more SwiftLint options, run `swiftlint help`, or see the [documentation](https://github.com/realm/SwiftLint#command-line).
 
 ## Uninstalling
 - To get rid of your virtual machine, you can run `vagrant destroy` from the repo directory.
@@ -54,7 +56,7 @@ If you encounter any problems installing or running, feel free to submit an issu
   * [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
 
 ## Further Reading
-- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://swift.org/documentation/TheSwiftProgrammingLanguage%28Swift4%29.epub))
+- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift42.epub))
 - [Swift Standard Library documentation](https://developer.apple.com/documentation/swift)
 - Apple's [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
 - Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
