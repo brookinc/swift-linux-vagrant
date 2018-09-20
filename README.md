@@ -38,7 +38,7 @@ If you encounter any problems installing or running, feel free to submit an issu
 - To get rid of your virtual machine altogether (ie. to free up hard drive space) see the _"Uninstalling"_ section below.
 
 ## Customizing
-- As-is, these files will install the latest release of Swift on Ubuntu 16.04, but you can easily change to a [different supported](https://swift.org/download/) Swift or Ubuntu version:
+- As-is, these files will install the latest release of Swift on Ubuntu 18.04, but you can easily change to a [different supported](https://swift.org/download/) Swift or Ubuntu version:
   - If you want to install a different version of Swift, change the `SWIFT_VERSION` variable in `Vagrantboot.sh`.
   - If you want to use a different version of Ubuntu, change the `config.vm.box` entry in `Vagrantfile`.
   - If you'd like to also install [SwiftLint](https://github.com/realm/SwiftLint), a helpful tool for improving the quality and consistency of your Swift code, just change the appropriate line in `Vagrantboot.sh` from `INSTALL_SWIFTLINT=false` to `INSTALL_SWIFTLINT=true` (and if you're on Windows, [run your command prompt as an administrator](https://github.com/brookinc/swift-linux-vagrant/issues/2) when you initialize your VM with `vagrant up` for the first time).
@@ -56,12 +56,12 @@ If you encounter any problems installing or running, feel free to submit an issu
   - [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
 
 ## Further Reading
-- [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/index.html) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift42.epub))
-- [Swift Standard Library documentation](https://developer.apple.com/documentation/swift)
+- [The Swift Programming Language](https://docs.swift.org/swift-book/) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift42.epub))
+- Apple's [Swift documentation](https://developer.apple.com/documentation/swift)
 - Apple's [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
 - Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
 - [Swift REPL guide](https://swift.org/getting-started/#using-the-repl) and [Debugging with LLDB](https://swift.org/getting-started/#using-the-lldb-debugger)
-- [IBM Swift Sandbox](https://swift.sandbox.bluemix.net/)
+- [Online Swift Playground](http://online.swiftplayground.run/)
 - [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown) and [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
 - The [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
 - [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
