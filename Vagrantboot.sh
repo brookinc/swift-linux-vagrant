@@ -16,7 +16,7 @@ set_env_variable VAGRANT_PREFER_SYSTEM_BIN 0  # (see: https://github.com/brookin
 # (for details and latest binaries, see https://swift.org/download/)
 # (this field may also be left blank when a dev snapshot version of
 # the trunk / master branch is specified below)
-SWIFT_VERSION='4.2'  # examples: '4.0', '3.1.1', '2.2.1'
+SWIFT_VERSION='4.2.1'  # examples: '4.0', '3.1.1', '2.2.1'
 
 # fill in this variable if you want to download a specific development snapshot rather than a final release
 # (for details and latest binaries, see https://swift.org/download/)
