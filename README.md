@@ -56,7 +56,7 @@ If you encounter any problems installing or running, feel free to submit an issu
   - [Uninstalling Vagrant](https://www.vagrantup.com/docs/installation/uninstallation.html)
 
 ## Further Reading
-- [The Swift Programming Language](https://docs.swift.org/swift-book/) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift42.epub))
+- [The Swift Programming Language](https://docs.swift.org/swift-book/) ([epub version](https://docs.swift.org/swift-book/TheSwiftProgrammingLanguageSwift51.epub))
 - Apple's [Swift documentation](https://developer.apple.com/documentation/swift)
 - Apple's [Swift Playgrounds](https://itunes.apple.com/ca/app/swift-playgrounds/id908519492?mt=8) iPad app
 - Apple's [Swift tutorials and resources](https://developer.apple.com/swift/resources/)
