@@ -104,33 +104,37 @@ if [ "$INSTALL_SWIFT" = true ] ; then
   if [ ! -d /vagrant/swift ] ; then
     mkdir /vagrant/swift
   fi
-  curl --fail --silent --show-error $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
-  CURL_ERROR=$?
-  curl --fail --silent --show-error "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-  CURL_ERROR=$(($CURL_ERROR+$?))
-  if [ $CURL_ERROR -eq 0 ] ; then
-    echo "Swift archive downloaded..."
+  if [ -d /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM ] ; then
+    echo "Swift installation found at /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM; skipping download..."
   else
-    echo "ERROR: Swift archive $SWIFT_ARCHIVE couldn't be downloaded. Double-check that this platform version + Swift version are listed here: https://swift.org/download/"
-    rm -f "/vagrant/swift/$SWIFT_ARCHIVE" "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-    exit 1
-  fi
+    curl --fail --silent --show-error $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
+    CURL_ERROR=$?
+    curl --fail --silent --show-error "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+    CURL_ERROR=$(($CURL_ERROR+$?))
+    if [ $CURL_ERROR -eq 0 ] ; then
+      echo "Swift archive downloaded..."
+    else
+      echo "ERROR: Swift archive $SWIFT_ARCHIVE couldn't be downloaded. Double-check that this platform version + Swift version are listed here: https://swift.org/download/"
+      rm -f "/vagrant/swift/$SWIFT_ARCHIVE" "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+      exit 1
+    fi
 
-  # import the Swift PGP keys (see: https://swift.org/download/#using-downloads)
-  wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-  # ...and verify the archive:
-  gpg --keyserver hkp://pool.sks-keyservers.net --refresh-keys Swift
-  gpg --verify "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-  if [ $? = 0 ] ; then
-    echo "Swift archive integrity verified..."
-  else
-    echo "ERROR: Swift archive integrity check failed; exiting installation."
-    exit 1
-  fi
+    # import the Swift PGP keys (see: https://swift.org/download/#using-downloads)
+    wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
+    # ...and verify the archive:
+    gpg --keyserver hkp://pool.sks-keyservers.net --refresh-keys Swift
+    gpg --verify "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+    if [ $? = 0 ] ; then
+      echo "Swift archive integrity verified..."
+    else
+      echo "ERROR: Swift archive integrity check failed; exiting installation."
+      exit 1
+    fi
 
-  # extract the archive (creates a "swift/[this-swift-version]/usr" subdir under /vagrant)
-  cd /vagrant/swift
-  tar xzf $SWIFT_ARCHIVE
+    # extract the archive (creates a "swift/[this-swift-version]/usr" subdir under /vagrant)
+    cd /vagrant/swift
+    tar xzf $SWIFT_ARCHIVE
+  fi
 
   # add our swift dir to $PATH
   set_env_variable PATH /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin:"${PATH}"
