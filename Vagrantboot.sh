@@ -59,9 +59,11 @@ else
 fi
 
 if (( $OS_VERSION_MAJOR >= 16 )) ; then
-  APT=apt
+  APT="apt-get -qq -o=Dpkg::Use-Pty=0"
+  # if desired, on Ubuntu 16+ you can use `apt` instead of `apt-get`:
+  #APT="apt -qq"
 else
-  APT=apt-get
+  APT="apt-get -qq -o=Dpkg::Use-Pty=0"
 fi
 echo "Using $APT for package installation..."
 
@@ -69,14 +71,14 @@ echo "Using $APT for package installation..."
 UPDATE_PACKAGES=true
 if [ "$UPDATE_PACKAGES" = true ] ; then
   echo "Updating packages..."
-  sudo $APT -y update
-  if (($OS_VERSION_MAJOR >= 16)) ; then
-    sudo apt -y full-upgrade
+  sudo $APT update
+  if [ "$APT" = apt ] ; then
+    sudo $APT full-upgrade
   else
-    sudo apt-get -y dist-upgrade
+    sudo $APT dist-upgrade
   fi
-  sudo $APT -y autoremove
-  sudo $APT -y clean
+  sudo $APT autoremove
+  sudo $APT clean
 else
   echo "Skipping package updates..."
 fi
@@ -87,13 +89,13 @@ if [ "$INSTALL_SWIFT" = true ] ; then
 
   # You can use `apt search MYKEYWORD` to search for available packages,
   # and `apt policy MYPACKAGENAME` to see available versions.
-  sudo $APT install -y clang
-  sudo $APT install -y libicu-dev
+  sudo $APT install clang
+  sudo $APT install libicu-dev
   # we also need python2.7 for now -- see: https://bugs.swift.org/browse/SR-2743
-  sudo $APT install -y libpython2.7-dev
+  sudo $APT install libpython2.7-dev
   if (($OS_VERSION_MAJOR <= 16)) ; then
     # we also need libcurl3 for now -- see: https://bugs.swift.org/browse/SR-2744
-    sudo $APT install -y libcurl3
+    sudo $APT install libcurl3
   fi
 
   echo "Installing Swift..."
@@ -152,9 +154,9 @@ INSTALL_SWIFTLINT=false
 if [ "$INSTALL_SWIFTLINT" = true ] ; then
   echo "Installing SwiftLint..."
   # for details, see: https://github.com/realm/SwiftLint/issues/732#issuecomment-339502688
-  sudo $APT install -y clang
-  sudo $APT install -y libblocksruntime0
-  sudo $APT install -y libcurl4-openssl-dev
+  sudo $APT install clang
+  sudo $APT install libblocksruntime0
+  sudo $APT install libcurl4-openssl-dev
 
   set_env_variable LINUX_SOURCEKIT_LIB_PATH "/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
 
@@ -203,6 +205,6 @@ else
 fi
 
 # Clean up again now that we're done installing
-sudo $APT -y autoremove
-sudo $APT -y clean
+sudo $APT autoremove
+sudo $APT clean
 echo "Setup complete."
