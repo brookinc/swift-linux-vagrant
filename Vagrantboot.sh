@@ -154,7 +154,7 @@ else
   echo "Skipping Swift install..."
 fi
 
-INSTALL_SWIFTLINT=false
+INSTALL_SWIFTLINT=true
 if [ "$INSTALL_SWIFTLINT" = true ] ; then
   echo "Installing SwiftLint..."
   # for details, see: https://github.com/realm/SwiftLint/issues/732#issuecomment-339502688
