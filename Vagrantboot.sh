@@ -164,22 +164,25 @@ if [ "$INSTALL_SWIFTLINT" = true ] ; then
 
   set_env_variable LINUX_SOURCEKIT_LIB_PATH "/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
 
-  git clone https://github.com/realm/SwiftLint.git ~vagrant/swiftlinttemp
-  pushd ~vagrant/swiftlinttemp
-  swift build -c release --static-swift-stdlib
-  if [ $? -eq 0 ] ; then
-    echo "SwiftLint built successfully!"
+  if [ -e /vagrant/swift/swiftlint/swiftlint ] ; then
+    echo "Swiftlint installation found at /vagrant/swift/swiftlint/swiftlint; skipping download..."
   else
-    echo "ERROR: SwiftLint build failed."
-    exit 1
+    git clone https://github.com/realm/SwiftLint.git ~vagrant/swiftlinttemp
+    pushd ~vagrant/swiftlinttemp
+    swift build -c release --static-swift-stdlib
+    if [ $? -eq 0 ] ; then
+      echo "SwiftLint built successfully!"
+      if [ ! -d /vagrant/swift/swiftlint ] ; then
+        mkdir /vagrant/swift/swiftlint
+      fi
+      mv .build/x86_64-unknown-linux/release/swiftlint /vagrant/swift/swiftlint
+      popd
+      rm -rf ~vagrant/swiftlinttemp
+    else
+      echo "ERROR: SwiftLint build failed."
+      exit 1
+    fi
   fi
-
-  if [ ! -d /vagrant/swift/swiftlint ] ; then
-    mkdir /vagrant/swift/swiftlint
-  fi
-  mv .build/x86_64-unknown-linux/release/swiftlint /vagrant/swift/swiftlint
-  popd
-  rm -rf ~vagrant/swiftlinttemp
 
   # add swiftlint dir to $PATH
   set_env_variable PATH /vagrant/swift/swiftlint:"${PATH}"
