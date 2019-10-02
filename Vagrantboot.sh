@@ -180,7 +180,6 @@ if [ "$INSTALL_SWIFTLINT" = true ] ; then
       rm -rf ~vagrant/swiftlinttemp
     else
       echo "ERROR: SwiftLint build failed."
-      exit 1
     fi
   fi
 
