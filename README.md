@@ -64,6 +64,7 @@ If you encounter any problems installing or running, feel free to submit an issu
 - [Online Swift Playground](http://online.swiftplayground.run/)
 - [Swift Algorithm Club](https://github.com/raywenderlich/swift-algorithm-club/blob/master/README.markdown) and [Design Patterns In Swift](https://github.com/ochococo/Design-Patterns-In-Swift)
 - The [awesome-swift](https://github.com/matteocrippa/awesome-swift) resource guide
+- [Swift development on Linux](https://www.raywenderlich.com/8325890-a-complete-guide-to-swift-development-on-linux) tutorial
 - [VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation)
 - [Vagrant documentation](https://www.vagrantup.com/docs/)
 - [Ubuntu documentation](https://help.ubuntu.com)
