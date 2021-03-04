@@ -12,11 +12,13 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://app.vagrantup.com/boxes/search.
-  #config.vm.box = "ubuntu/trusty64"      # ubuntu 14.04 LTS (Swift 2.2 - current)
+  # (Swift version compatibility can be determined at https://swift.org/download/ under the appropriate "Swift N.x" heading)
+  #config.vm.box = "ubuntu/trusty64"      # ubuntu 14.04 LTS (Swift 2.2 - 5.1.5)
   #config.vm.box = "ubuntu/wily64"        # ubuntu 15.10 (Swift 2.2 - 3.0.1)
   #config.vm.box = "ubuntu/xenial64"      # ubuntu 16.04 LTS (Swift 3.0.1 - current)
   #config.vm.box = "ubuntu/yakkety64"     # ubuntu 16.10 (Swift 3.1 - 4.1.3)
   config.vm.box = "ubuntu/bionic64"      # ubuntu 18.04 LTS (Swift 4.2 - current)
+  #config.vm.box = "ubuntu/focal64"      # ubuntu 20.04 LTS (Swift 5.2.4 - current)
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
