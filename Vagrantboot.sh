@@ -18,6 +18,17 @@ add_path () {
   echo "PATH=$1:\$PATH" >> ~vagrant/.profile  # we use \$ since we want expansion to occur when the file is read, not right now
 }
 
+# helper function for installing homebrew
+install_homebrew () {
+    # (see: https://docs.brew.sh/Homebrew-on-Linux)
+    runuser -u vagrant -- /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/vagrant/.bashrc
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    sudo $APT install build-essential
+    # TODO: the `-q` flag (here and in other `brew install` calls below) suppresses some output, but it's still very verbose -- is there any way to make it quieter?
+    runuser -u vagrant -- brew install -q gcc
+}
+
 # add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
 set_env_variable VAGRANT_PREFER_SYSTEM_BIN 0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
 
@@ -94,67 +105,79 @@ fi
 
 INSTALL_SWIFT=true
 if [ "$INSTALL_SWIFT" = true ] ; then
-  echo "Installing Swift dependencies..."
+  HOMEBREW_SWIFT=false
+  if [ "$HOMEBREW_SWIFT" = true ] ; then  # (optionally, we can use homebrew to install the latest Swift)
+    echo "Installing Swift..."
+    install_homebrew
+    # Note: homebrew does support targeting a specific version (ie. `brew search node` returns `node@18`, `node@20`, etc.),
+    # but it appears the Swift homebrew package only publishes latest (`brew search swift` doesn't return any versioned packages),
+    # so it doesn't look like we can target our given SWIFT_VERSION (or SWIFT_DEV_SNAPSHOT) here; we can only install latest.
+    runuser -u vagrant -- brew install -q swift
+    SWIFT_LIB_DIR=/home/linuxbrew/.linuxbrew/opt/swift/libexec/lib
+  else  # (otherwise, we download the given Swift binary and install it manually)
+    echo "Installing Swift dependencies..."
 
-  # install dependencies per: https://www.swift.org/install/linux/#installation-via-tarball
-  # (you can use `apt search MYKEYWORD` to search for available packages, and `apt policy MYPACKAGENAME` to see available versions, as needed)
-  echo "Installing Swift dependencies..."
-  if (($OS_VERSION_MAJOR <= 16)) ; then
-    # not sure if this first group is still needed?
-    sudo $APT install clang  libicu-dev  #libpython2.7-dev
-    
-    sudo $APT install binutils  git  libc6-dev  libcurl3  libedit2  libgcc-5-dev  libpython2.7  libsqlite3-0  libstdc++-5-dev  libxml2  pkg-config  tzdata  zlib1g-dev
-  elif (($OS_VERSION_MAJOR == 18)) ; then
-    sudo $APT install binutils  git  libc6-dev  libcurl4  libedit2  libgcc-5-dev  libpython2.7  libsqlite3-0  libstdc++-5-dev  libxml2  pkg-config  tzdata  zlib1g-dev
-  elif (($OS_VERSION_MAJOR == 20)) ; then
-    sudo $APT install binutils  git  gnupg2  libc6-dev  libcurl4  libedit2  libgcc-9-dev  libpython2.7  libsqlite3-0  libstdc++-9-dev  libxml2  libz3-dev  pkg-config  tzdata  uuid-dev  zlib1g-dev
-  elif (($OS_VERSION_MAJOR >= 22)) ; then
-    sudo $APT install binutils  git  gnupg2  libc6-dev  libcurl4-openssl-dev  libedit2  libgcc-9-dev  libpython3.8  libsqlite3-0  libstdc++-9-dev  libxml2-dev  libz3-dev  pkg-config  tzdata  unzip  zlib1g-dev
-  fi
-
-  echo "Installing Swift..."
-  # download the archive and signature files
-  if [ ! -d /vagrant/swift ] ; then
-    mkdir /vagrant/swift
-  fi
-  if [ -d /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM ] ; then
-    echo "Swift installation found at /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM; skipping download..."
-  else
-    echo "Downloading $SWIFT_URL..."
-    curl --fail --silent --show-error -L $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
-    CURL_ERROR=$?
-    curl --fail --silent --show-error -L "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-    CURL_ERROR=$(($CURL_ERROR+$?))
-    if [ $CURL_ERROR -eq 0 ] ; then
-      echo "Swift archive downloaded..."
-    else
-      echo "ERROR: Swift archive $SWIFT_ARCHIVE couldn't be downloaded from:"
-      echo "$SWIFT_URL"
-      echo "Double-check that this platform version + Swift version are listed here: https://swift.org/download/"
-      rm -f "/vagrant/swift/$SWIFT_ARCHIVE" "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-      exit 1
+    # install dependencies per: https://www.swift.org/install/linux/#installation-via-tarball
+    # (you can use `apt search MYKEYWORD` to search for available packages, and `apt policy MYPACKAGENAME` to see available versions, as needed)
+    echo "Installing Swift dependencies..."
+    if (($OS_VERSION_MAJOR <= 16)) ; then
+      # not sure if this first group is still needed?
+      sudo $APT install clang  libicu-dev  #libpython2.7-dev
+      
+      sudo $APT install binutils  git  libc6-dev  libcurl3  libedit2  libgcc-5-dev  libpython2.7  libsqlite3-0  libstdc++-5-dev  libxml2  pkg-config  tzdata  zlib1g-dev
+    elif (($OS_VERSION_MAJOR == 18)) ; then
+      sudo $APT install binutils  git  libc6-dev  libcurl4  libedit2  libgcc-5-dev  libpython2.7  libsqlite3-0  libstdc++-5-dev  libxml2  pkg-config  tzdata  zlib1g-dev
+    elif (($OS_VERSION_MAJOR == 20)) ; then
+      sudo $APT install binutils  git  gnupg2  libc6-dev  libcurl4  libedit2  libgcc-9-dev  libpython2.7  libsqlite3-0  libstdc++-9-dev  libxml2  libz3-dev  pkg-config  tzdata  uuid-dev  zlib1g-dev
+    elif (($OS_VERSION_MAJOR >= 22)) ; then
+      sudo $APT install binutils  git  gnupg2  libc6-dev  libcurl4-openssl-dev  libedit2  libgcc-9-dev  libpython3.8  libsqlite3-0  libstdc++-9-dev  libxml2-dev  libz3-dev  pkg-config  tzdata  unzip  zlib1g-dev
     fi
 
-    # import the Swift PGP keys (see: https://www.swift.org/install/linux/#installation-via-tarball)
-    wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
-
-    # ...and verify the archive:
-    gpg --keyserver hkp://keyserver.ubuntu.com --refresh-keys Swift
-    gpg --verify "/vagrant/swift/$SWIFT_ARCHIVE.sig"
-    if [ $? = 0 ] ; then
-      echo "Swift archive integrity verified..."
+    echo "Installing Swift..."
+    if [ ! -d /vagrant/swift ] ; then
+      mkdir /vagrant/swift
+    fi
+    if [ -d /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM ] ; then
+      echo "Swift installation found at /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM; skipping download..."
     else
-      echo "ERROR: Swift archive integrity check failed; exiting installation."
-      exit 1
+     # download the archive and signature files
+     echo "Downloading $SWIFT_URL..."
+      curl --fail --silent --show-error -L $SWIFT_URL > "/vagrant/swift/$SWIFT_ARCHIVE"
+      CURL_ERROR=$?
+      curl --fail --silent --show-error -L "$SWIFT_URL.sig" > "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+      CURL_ERROR=$(($CURL_ERROR+$?))
+      if [ $CURL_ERROR -eq 0 ] ; then
+        echo "Swift archive downloaded..."
+      else
+        echo "ERROR: Swift archive $SWIFT_ARCHIVE couldn't be downloaded from:"
+        echo "$SWIFT_URL"
+        echo "Double-check that this platform version + Swift version are listed here: https://swift.org/download/"
+        rm -f "/vagrant/swift/$SWIFT_ARCHIVE" "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+        exit 1
+      fi
+
+      # import the Swift PGP keys (see: https://www.swift.org/install/linux/#installation-via-tarball)
+      wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
+
+      # ...and verify the archive:
+      gpg --keyserver hkp://keyserver.ubuntu.com --refresh-keys Swift
+      gpg --verify "/vagrant/swift/$SWIFT_ARCHIVE.sig"
+      if [ $? = 0 ] ; then
+        echo "Swift archive integrity verified..."
+      else
+        echo "ERROR: Swift archive integrity check failed; exiting installation."
+        exit 1
+      fi
+
+      # extract the archive (creates a "swift/[this-swift-version]/usr" subdir under /vagrant)
+      cd /vagrant/swift
+      tar xzf $SWIFT_ARCHIVE
     fi
 
-    # extract the archive (creates a "swift/[this-swift-version]/usr" subdir under /vagrant)
-    cd /vagrant/swift
-    tar xzf $SWIFT_ARCHIVE
+    # add our swift dir to $PATH
+    add_path /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin
+    SWIFT_LIB_DIR=/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib
   fi
-
-  # add our swift dir to $PATH
-  add_path /vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/bin
 
   # test our swift install
   swift /vagrant/test.swift
@@ -171,40 +194,56 @@ else
   echo "Skipping Swift install..."
 fi
 
-# TODO: SwiftLint builds are failing currently; disabling for now: https://github.com/brookinc/swift-linux-vagrant/issues/4
-INSTALL_SWIFTLINT=false
+INSTALL_SWIFTLINT=true
 if [ "$INSTALL_SWIFTLINT" = true ] ; then
   echo "Installing SwiftLint..."
 
-  # for dependency details, see: https://github.com/realm/SwiftLint/issues/732#issuecomment-339502688
-  sudo $APT install clang
-  sudo $APT install libblocksruntime0
-  sudo $APT install libcurl4-openssl-dev
+  # TODO: SwiftLint builds are failing currently; using homebrew for now: https://github.com/brookinc/swift-linux-vagrant/issues/4
+  HOMEBREW_SWIFTLINT=true
+  if [ "$HOMEBREW_SWIFTLINT" = true ] ; then
+    install_homebrew
+    runuser -u vagrant -- brew install -q swiftlint
 
-  set_env_variable LINUX_SOURCEKIT_LIB_PATH "/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
-
-  if [ -e /vagrant/swift/swiftlint/swiftlint ] ; then
-    echo "Swiftlint installation found at /vagrant/swift/swiftlint/swiftlint; skipping download..."
+    # manually copy library dependencies to expected destinations
+    # (see: https://github.com/jpsim/SourceKitten/issues/792#issuecomment-1747421935
+    # and https://github.com/realm/SwiftLint/blob/main/Dockerfile)
+    cp $SWIFT_LIB_DIR/libsourcekitdInProc.so /usr/lib
+    cp $SWIFT_LIB_DIR/swift/host/libSwift*.so /usr/lib
+    cp $SWIFT_LIB_DIR/swift/linux/libBlocksRuntime.so /usr/lib
+    cp $SWIFT_LIB_DIR/swift/linux/libdispatch.so /usr/lib
+    cp $SWIFT_LIB_DIR/swift/linux/libswift*.so /usr/lib
   else
-    git clone https://github.com/realm/SwiftLint.git ~vagrant/swiftlinttemp
-    pushd ~vagrant/swiftlinttemp
-    echo "Buidling SwiftLint..."
-    swift build -c release --static-swift-stdlib
-    if [ $? -eq 0 ] ; then
-      echo "SwiftLint built successfully!"
-      if [ ! -d /vagrant/swift/swiftlint ] ; then
-        mkdir /vagrant/swift/swiftlint
-      fi
-      mv .build/x86_64-unknown-linux/release/swiftlint /vagrant/swift/swiftlint
-      popd
-      rm -rf ~vagrant/swiftlinttemp
-    else
-      echo "ERROR: SwiftLint build failed."
-    fi
-  fi
+    # otherwise, build swiftlint from source
+    # for dependency details, see: https://github.com/realm/SwiftLint/issues/732#issuecomment-339502688
+    sudo $APT install clang
+    sudo $APT install libblocksruntime0
+    sudo $APT install libcurl4-openssl-dev
 
-  # add swiftlint dir to $PATH
-  add_path /vagrant/swift/swiftlint
+    set_env_variable LINUX_SOURCEKIT_LIB_PATH "/vagrant/swift/$SWIFT_RELEASE-$SWIFT_PLATFORM/usr/lib"
+
+    if [ -e /vagrant/swift/swiftlint/swiftlint ] ; then
+      echo "Swiftlint installation found at /vagrant/swift/swiftlint/swiftlint; skipping download..."
+    else
+      git clone https://github.com/realm/SwiftLint.git ~vagrant/swiftlinttemp
+      pushd ~vagrant/swiftlinttemp
+      echo "Buidling SwiftLint..."
+      swift build -c release --static-swift-stdlib
+      if [ $? -eq 0 ] ; then
+        echo "SwiftLint built successfully!"
+        if [ ! -d /vagrant/swift/swiftlint ] ; then
+          mkdir /vagrant/swift/swiftlint
+        fi
+        mv .build/x86_64-unknown-linux/release/swiftlint /vagrant/swift/swiftlint
+        popd
+        rm -rf ~vagrant/swiftlinttemp
+      else
+        echo "ERROR: SwiftLint build failed."
+      fi
+    fi
+
+    # add swiftlint dir to $PATH
+    add_path /vagrant/swift/swiftlint
+  fi
 
   # write out a blank swiftlint configuration file
   if [ ! -e /vagrant/.swiftlint.yml ] ; then
