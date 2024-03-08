@@ -5,21 +5,23 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
-Vagrant.configure(2) do |config|
+Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://app.vagrantup.com/boxes/search.
-  # (Swift version compatibility can be determined at https://swift.org/download/ under the appropriate "Swift N.x" heading)
+  # boxes at https://vagrantcloud.com/search.
+  #config.vm.box = "base"
+# CUSTOM: use a Swift-compatible box
+# (Swift version compatibility can be determined at https://swift.org/download/ -> "Older Releases")
   #config.vm.box = "ubuntu/trusty64"      # ubuntu 14.04 LTS (Swift 2.2 - 5.1.5)
   #config.vm.box = "ubuntu/wily64"        # ubuntu 15.10 (Swift 2.2 - 3.0.1)
   #config.vm.box = "ubuntu/xenial64"      # ubuntu 16.04 LTS (Swift 3.0.1 - 5.5.3)
   #config.vm.box = "ubuntu/yakkety64"     # ubuntu 16.10 (Swift 3.1 - 4.1.3)
-  config.vm.box = "ubuntu/bionic64"      # ubuntu 18.04 LTS (Swift 4.2 - current)
+  #config.vm.box = "ubuntu/bionic64"      # ubuntu 18.04 LTS (Swift 4.2 - current)
   #config.vm.box = "ubuntu/focal64"       # ubuntu 20.04 LTS (Swift 5.2.4 - current)
-  #config.vm.box = "ubuntu/jammy64"       # ubuntu 22.04 LTS (Swift 5.7 - current)
+  config.vm.box = "ubuntu/jammy64"       # ubuntu 22.04 LTS (Swift 5.7 - current)
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -29,6 +31,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 # CUSTOM: forward additional ports (host/parent machine -> guest/VM)
   #config.vm.network "forwarded_port", host: 8080, guest: 80      #default apache/httpd port
@@ -42,7 +45,10 @@ Vagrant.configure(2) do |config|
   #config.vm.network "forwarded_port", host: 8000, guest: 8000    #misc. dev port
   #config.vm.network "forwarded_port", host: 8099, guest: 8099    #misc. dev port
 
-  #config.vm.network "public_network"
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -58,9 +64,16 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  # NOTE: we need to explicitly specify the current directory in our case
-  # (see https://stackoverflow.com/questions/29731003/synced-folder-in-vagrant-is-not-syncing-in-realtime )
+# CUSTOM: we may need to explicitly specify the current directory in our case
+# (see https://stackoverflow.com/questions/29731003/synced-folder-in-vagrant-is-not-syncing-in-realtime )
   #config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ""
+
+  # Disable the default share of the current code directory. Doing this
+  # provides improved isolation between the vagrant box and your host
+  # by making sure your Vagrantfile isn't accessible to the vagrant box.
+  # If you use this you may want to enable additional shared subfolders as
+  # shown above.
+  # config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -76,29 +89,19 @@ Vagrant.configure(2) do |config|
   #
   # View the documentation for the provider you are using for more
   # information on available options.
-# CUSTOM:
+# CUSTOM: functionality tweaks for VirtualBox
   config.vm.provider "virtualbox" do |v|
-    # allow symlinks (needed for some npm packages, ie. bower dependencies)
-    #v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant", "1"]
     # increase memory (with default "1024", `npm install` can run out of memory and report `Killed`: https://github.com/npm/npm/issues/6428)
     v.memory = "2048"
-    # suppress creation of the "ubuntu-xenial-16.04-cloudimg-console.log" file
-    # (see: https://groups.google.com/forum/#!topic/vagrant-up/eZljy-bddoI)
-    v.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
   end
 
-  # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
-  # such as FTP and Heroku are also available. See the documentation at
-  # https://docs.vagrantup.com/v2/push/atlas.html for more information.
-  # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
-  # end
-
   # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline <<-SHELL
-  #   sudo apt-get install apache2
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
   # SHELL
-  config.vm.provision :shell, path: "Vagrantboot.sh"
+# CUSTOM: use our own shell provisioning script for additional environment setup
+  config.vm.provision "shell", path: "Vagrantboot.sh"
 end
