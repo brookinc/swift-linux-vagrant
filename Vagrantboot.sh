@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# update this variable to reflect the desired Swift version to install
+# (for details and latest binaries, see https://swift.org/download/)
+# (this field may also be left blank when a dev snapshot version of
+# the trunk / master branch is specified below)
+SWIFT_VERSION='6.0'  # examples: '4.0', '3.1.1', '2.2.1'
+
+# fill in this variable if you want to download a specific development snapshot rather than a final release
+# (for details and latest binaries, see https://swift.org/download/)
+SWIFT_DEV_SNAPSHOT=''  # example: '2018-06-29-a'
+
 # helper function for setting simple environment variables (no expansion, ie. excluding $PATH)
 set_env_variable () {
   # export it for the current session
@@ -32,16 +42,6 @@ install_homebrew () {
 # add any environment variables needed to configure vagrant (see: https://www.vagrantup.com/docs/other/environmental-variables.html)
 set_env_variable VAGRANT_PREFER_SYSTEM_BIN 0  # (see: https://github.com/brookinc/swift-linux-vagrant/issues/1 and https://github.com/hashicorp/vagrant/pull/9503)
 
-# update this variable to reflect the desired Swift version to install
-# (for details and latest binaries, see https://swift.org/download/)
-# (this field may also be left blank when a dev snapshot version of
-# the trunk / master branch is specified below)
-SWIFT_VERSION='5.10.1'  # examples: '4.0', '3.1.1', '2.2.1'
-
-# fill in this variable if you want to download a specific development snapshot rather than a final release
-# (for details and latest binaries, see https://swift.org/download/)
-SWIFT_DEV_SNAPSHOT=''  # example: '2018-06-29-a'
-
 # determine the current operating system version
 OS_VERSION_PATTERN="Release:[^0-9]([0-9][0-9])\.([0-9][0-9])"
 OS_VERSION_SOURCE=$(lsb_release -a)
@@ -54,7 +54,7 @@ else
   exit 1
 fi
 
-# set up file names and paths based on the above
+# set up file names and paths based on the above variables
 SWIFT_PLATFORM_PATH="ubuntu$OS_VERSION_MAJOR$OS_VERSION_MINOR"
 SWIFT_PLATFORM="ubuntu$OS_VERSION_MAJOR.$OS_VERSION_MINOR"
 SWIFT_RELEASE="swift-$SWIFT_VERSION-RELEASE"
