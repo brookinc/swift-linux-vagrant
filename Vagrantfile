@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
+  # boxes at https://portal.cloud.hashicorp.com/vagrant/discover
   #config.vm.box = "base"
 # CUSTOM: use a Swift-compatible box
 # (Swift version compatibility can be determined at https://swift.org/download/ -> "Older Releases")
@@ -19,9 +19,12 @@ Vagrant.configure("2") do |config|
   #config.vm.box = "ubuntu/wily64"        # ubuntu 15.10 (Swift 2.2 - 3.0.1)
   #config.vm.box = "ubuntu/xenial64"      # ubuntu 16.04 LTS (Swift 3.0.1 - 5.5.3)
   #config.vm.box = "ubuntu/yakkety64"     # ubuntu 16.10 (Swift 3.1 - 4.1.3)
-  #config.vm.box = "ubuntu/bionic64"      # ubuntu 18.04 LTS (Swift 4.2 - current)
+  #config.vm.box = "ubuntu/bionic64"      # ubuntu 18.04 LTS (Swift 4.2 - 5.7)
   #config.vm.box = "ubuntu/focal64"       # ubuntu 20.04 LTS (Swift 5.2.4 - current)
   config.vm.box = "ubuntu/jammy64"       # ubuntu 22.04 LTS (Swift 5.7 - current)
+# (per https://askubuntu.com/a/1521304, Ubuntu no longer produces official Vagrant boxes;
+# currently, bento and alvistack appear to be the most popular providers of ubuntu 24.04+ boxes)
+  #config.vm.box = "bento/ubuntu-24.04"   # ubuntu 24.04 LTS (Swift 6.0 - current) (see also "alvistack/ubuntu-24.04")
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
